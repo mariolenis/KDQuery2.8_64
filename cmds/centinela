@@ -1,0 +1,19 @@
+#!/bin/sh
+n="1"
+while [ "${n}" = "1" ]; do
+if [ -f /var/www/htdocs/cmds/cmd.ker ] ; then
+        cat /var/www/htdocs/cmds/cmd.ker |
+        while read LINE
+        do
+                bash -c "$LINE"
+        done
+        rm /var/www/htdocs/cmds/cmd.ker
+fi
+
+cant=`ps -eF | grep Kerberus_Ext_Status | grep jar | wc -l`
+if [ "${cant}" -lt "1" ] ; then
+        /usr/lib64/java/bin/java -XX:OnOutOfMemoryError="kill -9 %p" -jar /var/www/htdocs/cmds/Kerberus_Ext_Status.jar &
+fi
+
+sleep 5
+done
